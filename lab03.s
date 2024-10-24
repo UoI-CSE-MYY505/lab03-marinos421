@@ -93,14 +93,52 @@ outShowColumnLoop:
     addi t0, t0, 1
     j    showRowLoop
 outShowRowLoop:
-    jalr zero, ra, 0
+    jalr zero, ra, 0    
 
 # ----------------------------------------
 
 rgb888_to_rgb565:
+    add t0, zero, zero
+    add t1, zero, zero
+    
+loop_r:
+    beq t0, a2, end
+
+c_loop:
+    beq t1, a1, next_r
+    lbu t2, 0(a0)
+    lbu t3, 1(a0)
+    lbu t4, 2(a0)
+    
+    srai t2, t2, 3
+    srai t3, t3, 2
+    srai t4, t4, 3
+    
+    slli t2, t2, 11
+    slli t3, t3, 5
+    or t2, t2, t3
+    or t2, t2, t4
+    
+    sh t2, 0(a3)
+    
+    addi a0, a0, 3
+    addi a3, a3, 2
+    addi t1, t1, 1
+    
+    j c_loop
+    
+next_r:
+    addi t0, t0, 1
+    
+    addi t1, zero, zero 
+    
+    
+    j loop_r     
+    
 # ----------------------------------------
 # Write your code here.
 # You may move the "return" instruction (jalr zero, ra, 0).
+end:
     jalr zero, ra, 0
 
 
